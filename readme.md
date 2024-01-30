@@ -17,3 +17,6 @@ upgrade head
 Необходимо некоторое время для запуска.
 
 По всем вопросам - https://t.me/extendo_merc
+
+
+![image](https://github.com/AlexSitohov/bwg/assets/101973205/5cb4471f-afc1-4d65-8ce1-6d85f8ddec73)
