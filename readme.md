@@ -14,3 +14,6 @@ RPS, получив чуть менее 500 RPS. Хотя использован
 cd exchange_rate_service/ && source env.sh && docker-compose -f docker/docker-compose.yml up -d && cd src/app && alembic upgrade head
 
 По всем вопросам - https://t.me/extendo_merc
+
+
+![image](https://github.com/AlexSitohov/bwg/assets/101973205/5cb4471f-afc1-4d65-8ce1-6d85f8ddec73)
