@@ -22,7 +22,6 @@ class KafkaService:
 
         try:
             await producer.send(self.kafka_config.consumer_topic, value=message)
-            print("Message sent successfully")
         finally:
             await producer.stop()
 
@@ -34,12 +33,11 @@ async def websocket_client(symbol):
         while True:
             response = await ws.recv()
             try:
-                # Преобразование строки JSON в объект Python
                 event = json.loads(response)
 
-                # Отправка объекта в Kafka
                 await kafka_service.send_message(event)
-                print("Message sent successfully")
+                logging.info(f"Сообщение отправлено: {e}")
+
 
             except json.JSONDecodeError as e:
                 logging.error(f"Ошибка при декодировании JSON: {e}")

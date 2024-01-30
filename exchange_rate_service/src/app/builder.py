@@ -33,12 +33,12 @@ class Application:
         self.exchange_rate_dao = provide_exchange_rate_dao(self.session)
 
     def _create_repositories(self):
-        self.auction_repository = lambda: provide_exchange_rate_repository(self.exchange_rate_dao)
+        self.exchange_rate_repository = lambda: provide_exchange_rate_repository(self.exchange_rate_dao)
 
     def _override_dependencies(self):
         self.app.dependency_overrides[
             provide_exchange_rate_repository_stub
-        ] = self.auction_repository
+        ] = self.exchange_rate_repository
 
     def _add_routes(self):
         self.app.include_router(exchange_rate_router)

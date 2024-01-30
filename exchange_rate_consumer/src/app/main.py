@@ -42,7 +42,6 @@ class KafkaService:
                 print(value)
 
                 try:
-                    # Преобразование строки JSON в объект Python
                     event = json.loads(value)
                     logger.info(event.get("s"), event.get("p"))
 

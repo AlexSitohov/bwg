@@ -1,5 +1,4 @@
-from sqlalchemy import func, select, distinct, desc, and_
-from sqlalchemy.orm import aliased
+from sqlalchemy import func, select, and_
 
 from app.db.enums import CoursePair
 from app.db.tables import ExchangeRates

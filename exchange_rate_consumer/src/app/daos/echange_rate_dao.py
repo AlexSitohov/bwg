@@ -15,4 +15,3 @@ class ExchangeRateDAO:
                 .values(currency_pair_name=data[0], price=float(data[1]))
             )
             await session.commit()
-            print('*****************************')
