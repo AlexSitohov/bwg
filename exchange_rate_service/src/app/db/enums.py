@@ -1,0 +1,12 @@
+from enum import Enum
+
+
+class CoursePair(Enum):
+    BTCUSDT = "BTCUSDT"
+    BTCRUB = "BTCRUB"
+    ETHUSDT = "ETHUSDT"
+    ETHRUB = "ETHRUB"
+    USDTTRCUSDT = "USDTTRCUSDT"
+    USDTTRCRUB = "USDTTRCRUB"
+    USDTERCUSDT = "USDTERCUSDT"
+    USDTERCRUB = "USDTERCRUB"
