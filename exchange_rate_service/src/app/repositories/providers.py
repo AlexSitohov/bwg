@@ -7,5 +7,7 @@ def provide_exchange_rate_repository_stub():
     raise NotImplementedError
 
 
-def provide_exchange_rate_repository(auction_dao: ExchangeRetaDAO) -> ExchangeRetaRepository:
+def provide_exchange_rate_repository(
+    auction_dao: ExchangeRetaDAO,
+) -> ExchangeRetaRepository:
     return ExchangeRetaRepository(auction_dao)

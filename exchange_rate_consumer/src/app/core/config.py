@@ -6,8 +6,6 @@ from dataclasses import dataclass
 def configure_logging():
     FORMAT = "%(levelname)s %(asctime)s %(filename)s:%(lineno)d %(message)s"
     LEVEL = int(os.environ["LOGGING_LEVEL"])
-    kafka_logger = logging.getLogger("aiokafka")
-    kafka_logger.setLevel(logging.WARNING)
     logging.basicConfig(level=LEVEL, format=FORMAT)
 
 
@@ -23,14 +21,15 @@ class PostgresConfig:
 
 
 @dataclass
-class KafkaConfig:
-    consumer_topic: str = os.environ["KAFKA_CONSUMER_TOPIC"]
-    consumer_group_id: str = os.environ["KAFKA_CONSUMER_GROUP_ID"]
-    brokers: str = os.environ["KAFKA_BROKERS"]
-    producer_topic: str = os.environ["KAFKA_PRODUCER_TOPIC"]
+class RabbitMQConfig:
+    queue_name: str = os.environ["RABBITMQ_QUEUE_NAME"]
+    username: str = os.environ["RABBITMQ_USERNAME"]
+    password: str = os.environ["RABBITMQ_PASSWORD"]
+    host: str = os.environ["RABBITMQ_HOST"]
+    exchange_name: str = os.environ.get("RABBITMQ_EXCHANGE_NAME", "exchange")
 
 
-kafka_config = KafkaConfig()
+rabbitmq_config = RabbitMQConfig()
 
 db_config = PostgresConfig(
     host=os.environ["POSTGRES_DB_HOST"],
@@ -40,6 +39,4 @@ db_config = PostgresConfig(
     dbname=os.environ["POSTGRES_DB_NAME"],
     pool_size=int(os.environ.get("SQLALCHEMY_POOL_SIZE", 10)),
     echo=True,
-
 )
-

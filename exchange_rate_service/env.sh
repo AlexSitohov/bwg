@@ -18,6 +18,14 @@ export KAFKA_SECURITY_PROTOCOL='SASL_PLAINTEXT'
 export KAFKA_SASL_PLAIN_USERNAME='user'
 export KAFKA_SASL_PLAIN_PASSWORD='password'
 
+export RABBITMQ_QUEUE_NAME='exchange_rate'
+export RABBITMQ_USERNAME='user'
+export RABBITMQ_PASSWORD='password'
+export RABBITMQ_HOST='rabbitmq'
+
+export REDIS_HOST='exchange_rate_redis'
+export REDIS_URL='redis://exchange_rate_redis:6379/0'
+
 export PYTHONPATH=$PWD:$PWD/src:$PWD/src/app
 export LOGGING_LEVEL=20
 

@@ -2,9 +2,10 @@ FROM python:3.11
 
 WORKDIR /code
 
-COPY ./requirements.txt /code/requirements.txt
+RUN pip install poetry
 
-RUN pip install --upgrade -r /code/requirements.txt
+COPY ./pyproject.toml ./poetry.lock /code/
+RUN poetry config virtualenvs.create false && poetry install --only main
 
 COPY ./src/app /code/src/app
 ENV PYTHONPATH=/code/src:/code/src/app

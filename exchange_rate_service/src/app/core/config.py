@@ -14,6 +14,17 @@ class PostgresConfig:
     echo: bool = True
 
 
+@dataclass
+class RedisConfig:
+    url: str = os.environ["REDIS_URL"]
+
+    def get_port(self):
+        return self.url.split(":")[2].split("/")[0]
+
+    def get_host(self):
+        return self.url.split(":")[1].replace("//", "")
+
+
 db_config = PostgresConfig(
     host=os.environ["POSTGRES_DB_HOST"],
     port=int(os.environ["POSTGRES_DB_PORT"]),
@@ -22,9 +33,8 @@ db_config = PostgresConfig(
     dbname=os.environ["POSTGRES_DB_NAME"],
     pool_size=int(os.environ.get("SQLALCHEMY_POOL_SIZE", 10)),
     echo=True,
-
 )
-
+redis_config = RedisConfig()
 
 
 def configure_logging():

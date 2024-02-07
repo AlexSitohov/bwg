@@ -1,4 +1,4 @@
-from app.db.enums import CoursePair
+from app.dblayer.enums import CoursePair
 
 
 async def get_course_pair(course_rate_pare: CoursePair | None = None):
