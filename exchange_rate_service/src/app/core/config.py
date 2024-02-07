@@ -18,12 +18,6 @@ class PostgresConfig:
 class RedisConfig:
     url: str = os.environ["REDIS_URL"]
 
-    def get_port(self):
-        return self.url.split(":")[2].split("/")[0]
-
-    def get_host(self):
-        return self.url.split(":")[1].replace("//", "")
-
 
 db_config = PostgresConfig(
     host=os.environ["POSTGRES_DB_HOST"],

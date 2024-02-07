@@ -3,6 +3,7 @@ import logging
 from functools import wraps
 from uuid import UUID
 from datetime import datetime
+from redis.exceptions import ConnectionError
 
 
 from app.dblayer.redis.providers import redis_cache
@@ -22,19 +23,22 @@ def cache_response(hash_name: str, expiration_time: int):
         @wraps(func)
         async def wrapper(*args, **kwargs):
             cache_key = f"{hash_name}:{args}:{kwargs}"
+            try:
+                cached_value = await redis_cache.redis.get(cache_key)
+                if cached_value:
+                    return json.loads(cached_value)
 
-            cached_value = await redis_cache.redis.get(cache_key)
-            if cached_value:
-                return json.loads(cached_value)
+                result = await func(*args, **kwargs)
 
-            result = await func(*args, **kwargs)
-
-            await redis_cache.redis.set(
-                cache_key,
-                json.dumps(result, default=custom_serializer),
-                ex=expiration_time,
-            )
-            return result
+                await redis_cache.redis.set(
+                    cache_key,
+                    json.dumps(result, default=custom_serializer),
+                    ex=expiration_time,
+                )
+                return result
+            except ConnectionError as e:
+                logging.exception(f"Не удается подключиться к Redis {e}")
+                return await func(*args, **kwargs)
 
         return wrapper
 

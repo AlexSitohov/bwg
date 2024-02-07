@@ -3,8 +3,8 @@ from asyncpg import Pool
 
 
 class ExchangeRetaDAO:
-
-    async def find_all(self, pool: Pool, param: CoursePair | None):
+    @staticmethod
+    async def find_all(pool: Pool, param: CoursePair | None):
         query = """
                     SELECT er.id, er.currency_pair_name, er.price, er.created_at
                     FROM exchange_rates er
@@ -28,3 +28,14 @@ class ExchangeRetaDAO:
         results_dict = [dict(record) for record in result]
 
         return results_dict
+
+    @staticmethod
+    async def create_exchange_rate(pool: Pool, data: tuple[str, float]):
+        await pool.execute(
+            """
+            INSERT INTO exchange_rates (currency_pair_name, price)
+            VALUES ($1, $2)
+            """,
+            data[0],
+            float(data[1]),
+        )

@@ -3,12 +3,10 @@ import os
 from dataclasses import dataclass
 
 
-
 def configure_logging():
     FORMAT = "%(levelname)s %(asctime)s %(filename)s:%(lineno)d %(message)s"
     LEVEL = int(os.environ["LOGGING_LEVEL"])
     logging.basicConfig(level=LEVEL, format=FORMAT)
-
 
 
 @dataclass
