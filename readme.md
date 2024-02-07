@@ -18,4 +18,10 @@ upgrade head
 
 По всем вопросам - https://t.me/extendo_merc
 
+
+![image](https://github.com/AlexSitohov/bwg/assets/101973205/c8b2e0f3-1736-482c-a18b-b45ac75bd42a)
+
+
 ![image](https://github.com/AlexSitohov/bwg/assets/101973205/5cb4471f-afc1-4d65-8ce1-6d85f8ddec73)
+
+
