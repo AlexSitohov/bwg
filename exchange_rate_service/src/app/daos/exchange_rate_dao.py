@@ -1,38 +1,41 @@
-from sqlalchemy import func, select, and_
-
-from app.db.enums import CoursePair
-from app.db.tables import ExchangeRates
+from app.dblayer.enums import CoursePair
+from asyncpg import Pool
 
 
 class ExchangeRetaDAO:
-    def __init__(self, session):
-        self.session = session
+    @staticmethod
+    async def find_all(pool: Pool, param: CoursePair | None):
+        query = """
+                    SELECT er.id, er.currency_pair_name, er.price, er.created_at
+                    FROM exchange_rates er
+                    JOIN (
+                        SELECT currency_pair_name, MAX(created_at) AS latest_created_at
+                        FROM exchange_rates
+                        GROUP BY currency_pair_name
+                    ) AS subquery
+                    ON er.currency_pair_name = subquery.currency_pair_name
+                    AND er.created_at = subquery.latest_created_at
+                    """
 
-    async def find_all(self, param: CoursePair | None):
-        async with self.session() as session:
-            subquery = (
-                select(
-                    ExchangeRates.currency_pair_name,
-                    func.max(ExchangeRates.created_at).label("latest_created_at")
-                )
-                .group_by(ExchangeRates.currency_pair_name)
-                .subquery()
-            )
+        if param is not None:
+            query += " WHERE er.currency_pair_name = $1"
 
-            latest_rates = (
-                select(
-                    ExchangeRates.id,
-                    ExchangeRates.currency_pair_name,
-                    ExchangeRates.price,
-                    ExchangeRates.created_at
-                )
-                .join(subquery, and_(
-                    ExchangeRates.currency_pair_name == subquery.c.currency_pair_name,
-                    ExchangeRates.created_at == subquery.c.latest_created_at
-                ))
-            )
+        if param is not None:
+            result = await pool.fetch(query, param)
+        else:
+            result = await pool.fetch(query)
 
-            if param is not None:
-                latest_rates = latest_rates.filter(ExchangeRates.currency_pair_name == param)
+        results_dict = [dict(record) for record in result]
 
-            return (await session.execute(latest_rates)).all()
+        return results_dict
+
+    @staticmethod
+    async def create_exchange_rate(pool: Pool, data: tuple[str, float]):
+        await pool.execute(
+            """
+            INSERT INTO exchange_rates (currency_pair_name, price)
+            VALUES ($1, $2)
+            """,
+            data[0],
+            float(data[1]),
+        )

@@ -17,7 +17,7 @@ class ExchangeRateModel:
         created_at: datetime
 
     class POST(Base):
-        ...
+        pass
 
     class PUT(Base):
-        ...
+        pass

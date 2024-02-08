@@ -1,5 +1,7 @@
-import asyncpg
 from app.core.config import db_config
+
+
+import asyncpg
 
 
 async def create_pool():

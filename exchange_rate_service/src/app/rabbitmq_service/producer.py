@@ -5,14 +5,14 @@ import logging
 import aio_pika
 import websockets
 
-from app.core.config import rabbitmq_config, configure_logging
+from app.core.config import rabbitmq_config
 
 
-class RabbitMQService:
+class RabbitMQProducer:
     def __init__(self, rabbitmq_config):
         self.rabbitmq_config = rabbitmq_config
 
-    async def send_message(self, message):
+    async def produce_message(self, message):
         connection = await aio_pika.connect_robust(
             f"amqp://{self.rabbitmq_config.username}:{self.rabbitmq_config.password}@{self.rabbitmq_config.host}"
         )
@@ -25,7 +25,7 @@ class RabbitMQService:
 
 
 async def websocket_client(symbol):
-    rabbitmq_service = RabbitMQService(rabbitmq_config)
+    rabbitmq_service = RabbitMQProducer(rabbitmq_config)
 
     async with websockets.connect(
         f"wss://stream.binance.com:9443/ws/{symbol}@ticker"
@@ -35,14 +35,14 @@ async def websocket_client(symbol):
             try:
                 event = json.loads(response)
 
-                await rabbitmq_service.send_message(event)
+                await rabbitmq_service.produce_message(event)
                 logging.info(f"Сообщение отправлено {event}")
 
             except json.JSONDecodeError as e:
                 logging.error(f"Ошибка при декодировании JSON: {e}")
 
 
-async def main():
+async def start_producer():
     symbols = [
         "BTCRUB",
         "BTCUSDT",
@@ -55,8 +55,3 @@ async def main():
     ]
     tasks = [websocket_client(symbol.lower()) for symbol in symbols]
     await asyncio.gather(*tasks)
-
-
-if __name__ == "__main__":
-    configure_logging()
-    asyncio.run(main())

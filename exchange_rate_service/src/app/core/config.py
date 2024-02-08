@@ -14,6 +14,11 @@ class PostgresConfig:
     echo: bool = True
 
 
+@dataclass
+class RedisConfig:
+    url: str = os.environ["REDIS_URL"]
+
+
 db_config = PostgresConfig(
     host=os.environ["POSTGRES_DB_HOST"],
     port=int(os.environ["POSTGRES_DB_PORT"]),
@@ -22,9 +27,20 @@ db_config = PostgresConfig(
     dbname=os.environ["POSTGRES_DB_NAME"],
     pool_size=int(os.environ.get("SQLALCHEMY_POOL_SIZE", 10)),
     echo=True,
-
 )
+redis_config = RedisConfig()
 
+
+@dataclass
+class RabbitMQConfig:
+    queue_name: str = os.environ["RABBITMQ_QUEUE_NAME"]
+    username: str = os.environ["RABBITMQ_USERNAME"]
+    password: str = os.environ["RABBITMQ_PASSWORD"]
+    host: str = os.environ["RABBITMQ_HOST"]
+    exchange_name: str = os.environ.get("RABBITMQ_EXCHANGE_NAME", "exchange")
+
+
+rabbitmq_config = RabbitMQConfig()
 
 
 def configure_logging():

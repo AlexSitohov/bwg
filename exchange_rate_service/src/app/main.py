@@ -1,13 +1,22 @@
+import asyncio
+
 from fastapi import FastAPI
 
 from app.builder import Application
-from app.db.connection import configure_engine
+from app.rabbitmq_service.consumer import start_consumer
+from app.rabbitmq_service.producer import start_producer
 
 
 def get_app() -> FastAPI:
-    engine = configure_engine()
-    application = Application(engine).build_application().app
-    return application
+    application = Application()
+    build = application.build_application()
+    return build.app
 
 
 app = get_app()
+
+
+@app.on_event("startup")
+async def startup_event():
+    asyncio.create_task(start_producer())
+    asyncio.create_task(start_consumer())

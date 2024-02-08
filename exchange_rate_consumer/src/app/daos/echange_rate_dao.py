@@ -1,17 +1,17 @@
-from sqlalchemy.ext.asyncio import async_sessionmaker
-from sqlalchemy import insert
-
-from app.dblayer.tables import ExchangeRates
+from asyncpg import Pool
 
 
 class ExchangeRateDAO:
-    def __init__(self, session: async_sessionmaker):
-        self.session = session
+    def __init__(self, pool: Pool):
+        self.pool = pool
 
     async def create_exchange_rate(self, data: tuple):
-        async with self.session() as session:
-            await session.execute(
-                insert(ExchangeRates)
-                .values(currency_pair_name=data[0], price=float(data[1]))
+        async with self.pool.acquire() as connection:
+            await connection.execute(
+                """
+                INSERT INTO exchange_rates (currency_pair_name, price)
+                VALUES ($1, $2)
+                """,
+                data[0],
+                float(data[1]),
             )
-            await session.commit()

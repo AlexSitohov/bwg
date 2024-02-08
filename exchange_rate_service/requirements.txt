@@ -1,8 +1,10 @@
 sqlalchemy==2.0.25
 pydantic==2.6.0
-asyncpg
+psycopg==3.1
 fastapi
 uvicorn
 psycopg2
+asyncpg
 locust
-
+asyncpg
+redis
