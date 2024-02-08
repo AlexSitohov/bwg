@@ -1,7 +1,7 @@
 from asyncpg import Pool
 from fastapi import APIRouter, Depends
 
-from app.dblayer.connection import get_pool
+from app.depends.get_connection_pool import get_pool
 from app.dblayer.enums import CoursePair
 from app.depends.get_course_pair import get_course_pair
 from app.models.exchange_rate_pare import ExchangeRateModel

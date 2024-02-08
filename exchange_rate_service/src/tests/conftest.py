@@ -13,7 +13,7 @@ from yoyo import read_migrations, get_backend
 
 from app.core.config import db_config
 from app.builder import Application
-from app.dblayer.connection import get_pool
+from app.depends.get_connection_pool import get_pool
 
 
 pytest_plugins = ("tests.functional.fixtures.create",)
@@ -35,22 +35,6 @@ def provide_postgres_container() -> PostgresContainer:
     yield postgres_container
 
     postgres_container.stop()
-
-
-@pytest.fixture(scope="session")
-def provide_redis_container() -> RedisContainer:
-    redis_container = RedisContainer(
-        "redis:7.2.1",
-        port_to_expose=6379,
-        password=None,
-    )
-    redis_container.get_container_host_ip = lambda: "localhost"
-
-    redis_container.start()
-
-    yield redis_container
-
-    redis_container.stop()
 
 
 @pytest_asyncio.fixture()
